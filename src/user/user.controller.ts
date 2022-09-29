@@ -12,27 +12,20 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from './../auth/guards/jwt.auth.guard';
-import { Role } from 'src/user/entities/role.enum';
 import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
+import { roles } from './constants/role';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Post()
-  // @ApiOperation({ summary: 'Create user' })
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.userService.create(createUserDto);
-  // }
-
   //authentication and roles guard
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN) //provide meta data
+  @Roles(roles.Admin, roles.User) //provide meta data
   //authentication and roles guard
   //swagger documentation
   @ApiBearerAuth()
@@ -43,8 +36,8 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER, Role.ADMIN)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.USER, Role.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user using Id' })
   @Get(':id')
@@ -52,8 +45,8 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER, Role.ADMIN)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.USER, Role.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update user using Id' })
   @Patch(':id')
@@ -64,8 +57,8 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER, Role.ADMIN)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.USER, Role.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete user using Id' })
   @Delete(':id')
